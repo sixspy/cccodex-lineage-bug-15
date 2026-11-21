@@ -1,0 +1,20 @@
+services:
+  lineage-lab:
+    build: .
+    container_name: cc-lineage-lab-lineage-bug-15
+    ports:
+      - "7435:7400"
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "7400"
+      DATABASE_PATH: /app/instance/lineage_lab.db
+    volumes:
+      - lineage_lab_data:/app/instance
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:7400/login', timeout=5)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+volumes:
+  lineage_lab_data:

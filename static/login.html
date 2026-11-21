@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>登录 · 表血缘影响台</title>
+  <link rel="stylesheet" href="/static/css/lineage.css" />
+</head>
+<body class="login-body">
+  <form class="login-card" id="f">
+    <h1>表血缘影响台</h1>
+    <p class="muted">数据工程 · 血缘影响分析</p>
+    <label>用户名<input name="username" value="admin" autocomplete="username" /></label>
+    <label>密码<input name="password" type="password" value="123456" autocomplete="current-password" /></label>
+    <button class="primary" type="submit">登录</button>
+    <p class="err" id="err"></p>
+  </form>
+  <script>
+    document.getElementById('f').onsubmit = async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const r = await fetch('/api/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          username: fd.get('username'),
+          password: fd.get('password'),
+        }),
+      });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        document.getElementById('err').textContent = j.error || '登录失败';
+        return;
+      }
+      location.href = '/app';
+    };
+  </script>
+</body>
+</html>

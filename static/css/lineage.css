@@ -1,0 +1,50 @@
+:root {
+  --bg: #0f1c1a;
+  --panel: #162824;
+  --line: #2a403b;
+  --text: #e7f0ec;
+  --muted: #8aa399;
+  --accent: #d4a017;
+  --danger: #e07070;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; display: flex;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: radial-gradient(1200px 600px at 10% -10%, #1c332e, var(--bg));
+  color: var(--text);
+}
+.login-body { display: grid; place-items: center; }
+.login-card, .card {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 12px; padding: 1.25rem; box-shadow: 0 8px 24px rgba(0,0,0,.25);
+}
+.login-card { width: min(360px, 92vw); display: grid; gap: .75rem; }
+.rail {
+  width: 200px; padding: 1rem .75rem; border-right: 1px solid var(--line);
+  background: #12221f; display: flex; flex-direction: column; gap: .5rem;
+}
+.brand { font-weight: 700; letter-spacing: .04em; color: var(--accent); padding: .5rem; }
+.rail nav { display: grid; gap: .35rem; flex: 1; }
+.rail button, .row button, button.primary {
+  border: 1px solid var(--line); background: #1a2d28; color: var(--text);
+  border-radius: 8px; padding: .55rem .75rem; cursor: pointer; text-align: left;
+}
+.rail button.active, button.primary { background: #3a2e0f; border-color: var(--accent); color: #ffe9a8; }
+main { flex: 1; padding: 1rem 1.25rem; overflow: auto; }
+.top { display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem; }
+.muted { color: var(--muted); }
+.err { color: #ff8f8f; }
+.tag {
+  display: inline-block; font-size: .75rem; padding: .15rem .45rem;
+  border-radius: 999px; border: 1px solid var(--line); background: #20332e;
+}
+.wall { display: grid; gap: .85rem; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: end; }
+label { display: grid; gap: .25rem; font-size: .85rem; color: var(--muted); }
+input, select {
+  background: #0d1816; border: 1px solid var(--line); color: var(--text);
+  border-radius: 8px; padding: .45rem .55rem; min-width: 120px;
+}
+h2,h3 { margin: 0 0 .5rem; }
+pre { white-space: pre-wrap; font-size: .8rem; }

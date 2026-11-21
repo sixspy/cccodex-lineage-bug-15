@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>表血缘影响台</title>
+  <link rel="stylesheet" href="/static/css/lineage.css" />
+</head>
+<body>
+  <aside class="rail">
+    <div class="brand">血缘影响台</div>
+    <nav id="nav">
+      <button data-tab="nodes" class="active" type="button">节点目录</button>
+      <button data-tab="edges" type="button">边关系</button>
+      <button data-tab="impact" type="button">影响分析</button>
+      <button data-tab="notify" type="button">下游通知</button>
+      <button data-tab="coverage" type="button">覆盖对账</button>
+      <button data-tab="settings" type="button">台参数</button>
+    </nav>
+    <button id="logout" type="button">退出</button>
+  </aside>
+  <main>
+    <header class="top">
+      <span id="lab"></span>
+      <span class="tag" id="chip"></span>
+      <span class="muted" id="msg"></span>
+    </header>
+    <div id="view"></div>
+  </main>
+  <script type="module" src="/static/js/app.js"></script>
+</body>
+</html>
