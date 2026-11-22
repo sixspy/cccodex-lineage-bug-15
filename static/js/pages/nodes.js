@@ -16,10 +16,10 @@ export async function renderNodes(view, setMsg) {
     <section class="wall" style="margin-top:1rem">
       ${(j.items || []).map((n) => `<article class="card">
         <h3>${n.node_code}</h3>
-        <span class="tag">${n.status}</span> <span class="tag" data-thick="alias_swap">别名已切</span>
+        <span class="tag">${n.status}</span>${n.alias_marker ? ` <span class="tag" data-thick="alias_swap">${n.alias_marker}</span>` : ''}
         <span class="tag">${n.layer}</span>
         <p>${n.table_name}</p>
-        <p class="muted">上游 ${n.upstream_count} · 下游 ${n.downstream_count} · ${n.owner_team}</p>
+        <p class="muted">上游 ${n.upstream_count} · 下游 ${n.downstream_count} · ${n.owner_team}${n.old_name_count ? ` · 旧名 ${n.old_name_count}` : ''}</p>
         <div class="row">
           <button data-act="${n.id}" type="button">启用</button>
           <button data-ret="${n.id}" type="button">停用</button>

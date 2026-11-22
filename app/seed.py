@@ -27,6 +27,7 @@ def seed_if_needed(db_path: str | None = None) -> dict:
         ).fetchone()
         if not _schema_compatible(conn) or (ver and ver["value"] != SCHEMA_VERSION):
             for table in (
+                "alias_vouchers",
                 "notify_logs",
                 "impact_hits",
                 "impact_jobs",
@@ -109,6 +110,7 @@ def reset_seed(db_path: str | None = None) -> None:
     init_schema(db_path)
     with get_db(db_path) as conn:
         for table in (
+            "alias_vouchers",
             "notify_logs",
             "impact_hits",
             "impact_jobs",

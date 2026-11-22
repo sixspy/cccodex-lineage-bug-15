@@ -299,7 +299,22 @@ def create_app() -> Bottle:
     @wrap
     def api_alias_swap_half():
         _require_user()
-        return _json(alias_swap_svc.reconcile_display())
+        return _json(alias_swap_svc.verify_and_release())
+
+    @app.post("/api/alias_swap/verify")
+    @wrap
+    def api_alias_swap_verify():
+        _require_user()
+        body = _read_json()
+        return _json(
+            alias_swap_svc.verify_and_release(operator=str(body.get("operator") or ""))
+        )
+
+    @app.get("/api/alias_swap/vouchers")
+    @wrap
+    def api_alias_swap_vouchers():
+        _require_user()
+        return _json({"items": alias_swap_svc.voucher_rows()})
 
     @app.get("/api/alias_swap/snap")
     @wrap

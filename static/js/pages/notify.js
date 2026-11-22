@@ -7,7 +7,7 @@ export async function renderNotify(view, setMsg) {
     .map((j) => `<option value="${j.id}">${j.job_code}</option>`).join('');
   view.innerHTML = `
     <section class="card">
-      <h2>下游通知</h2><span class="tag">别名已切</span>
+      <h2>下游通知</h2>
       <div class="row">
         <label>成功作业<select id="jid">${opts || '<option value="">无</option>'}</select></label>
         <button class="primary" id="go" type="button">按作业派发</button>

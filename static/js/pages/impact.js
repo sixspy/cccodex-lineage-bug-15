@@ -15,7 +15,7 @@ export async function renderImpact(view, setMsg) {
     <section class="wall" style="margin-top:1rem">
       ${(jobs.items || []).map((j) => `<article class="card">
         <h3>${j.job_code}</h3>
-        <span class="tag">${j.status}</span> <span class="tag">别名已切</span>
+        <span class="tag">${j.status}</span> <span class="tag">旧名 ${j.old_name_count}</span>
         <p>根 ${j.node_code} · 命中 ${j.affected_count}</p>
         <p class="muted">${j.message}</p>
         <button data-d="${j.id}" type="button">详情</button>

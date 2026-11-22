@@ -30,6 +30,13 @@ def list_nodes(layer: str | None = None, db_path: str | None = None) -> list[dic
             ).fetchone()["c"]
             it["upstream_count"] = int(up)
             it["downstream_count"] = int(down)
+            voucher = conn.execute(
+                "SELECT COUNT(*) AS c, COALESCE(SUM(old_edge_count),0) AS s "
+                "FROM alias_vouchers WHERE node_id=?",
+                (it["id"],),
+            ).fetchone()
+            it["alias_marker"] = "别名已切" if int(voucher["c"]) > 0 else ""
+            it["old_name_count"] = int(voucher["s"])
         return items
 
 
@@ -119,7 +126,7 @@ def retire_node(node_id: int, db_path: str | None = None) -> dict:
 
 
 def merge_nodes(primary_id: int, secondary_id: int, db_path: str | None = None) -> dict:
-    from app.services.alias_swap import commit_action, panel_chip, pack_rows
+    from app.services import alias_swap
 
     with get_db(db_path) as conn:
         primary = conn.execute(
@@ -130,15 +137,25 @@ def merge_nodes(primary_id: int, secondary_id: int, db_path: str | None = None) 
         ).fetchone()
         if not primary or not secondary:
             raise ServiceError("主从节点不存在", 404)
+        voucher = alias_swap.seal_voucher_conn(
+            conn,
+            int(secondary["id"]),
+            primary["table_name"],
+            operator="合并",
+            rename=False,
+        )
         conn.execute(
             "UPDATE lineage_nodes SET status='停用', note=? WHERE id=?",
             (f"已并入{primary['node_code']}", secondary_id),
         )
-        commit_action({"primary": primary_id, "secondary": secondary_id}, db_path)
+        pack_count = conn.execute(
+            "SELECT COUNT(*) AS c FROM alias_vouchers"
+        ).fetchone()["c"]
         return {
             "primary": dict(primary),
             "secondary_id": secondary_id,
-            "chip": panel_chip(db_path),
-            "pack_count": len(pack_rows(db_path)),
-            "message": "合并已亮",
+            "chip": "别名已切",
+            "old_name_count": voucher["old_edge_count"],
+            "pack_count": int(pack_count),
+            "message": f"合并已封存旧名：{voucher['voucher_code']}",
         }

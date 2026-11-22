@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from app.db import get_db
+from app.services import alias_swap
 from app.services.errors import ServiceError
 
 
@@ -11,7 +12,13 @@ def list_jobs(db_path: str | None = None) -> list[dict]:
             "SELECT j.*, n.node_code, n.table_name FROM impact_jobs j "
             "JOIN lineage_nodes n ON n.id=j.root_node_id ORDER BY j.id DESC"
         ).fetchall()
-        return [dict(r) for r in rows]
+        sealed = conn.execute(
+            "SELECT COALESCE(SUM(old_edge_count),0) AS s FROM alias_vouchers"
+        ).fetchone()["s"]
+        items = [dict(r) for r in rows]
+        for it in items:
+            it["old_name_count"] = int(sealed)
+        return items
 
 
 def job_detail(job_id: int, db_path: str | None = None) -> dict:
@@ -46,6 +53,8 @@ def start_impact(root_node_id: int, db_path: str | None = None) -> dict:
         ).fetchone()
         if running:
             raise ServiceError("该根节点已有在途影响作业", 409)
+        # 闭包闸门：别名指纹与边号不合时拦住，核齐后才放行
+        alias_swap.require_aligned_or_raise(conn=conn)
         seq = conn.execute("SELECT COUNT(*) AS c FROM impact_jobs").fetchone()["c"] + 1
         job_code = f"IMP-{seq:04d}"
         cur = conn.execute(

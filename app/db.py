@@ -78,6 +78,21 @@ CREATE TABLE IF NOT EXISTS meta (
   key TEXT PRIMARY KEY,
   value TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS alias_vouchers (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  voucher_code TEXT NOT NULL UNIQUE,
+  node_id INTEGER NOT NULL REFERENCES lineage_nodes(id),
+  node_code TEXT NOT NULL,
+  old_table_name TEXT NOT NULL,
+  new_table_name TEXT NOT NULL,
+  old_edge_count INTEGER NOT NULL DEFAULT 0,
+  old_edges TEXT NOT NULL DEFAULT '[]',
+  edge_fp TEXT NOT NULL,
+  operator TEXT NOT NULL DEFAULT '',
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE(node_id, old_table_name)
+);
 """
 
 
